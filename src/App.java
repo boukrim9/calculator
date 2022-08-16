@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import java.awt.Color;
 
@@ -23,50 +24,59 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
     double value1 = 0;
     double value2 = 0;
     Double result = 0.0;
+    double toBeCalculated = 0.0;
     
     String operator = "";
 
 
     public static final String[][] buttons_text = {
-        {"CE", "C", "<", "/"},
-        {"7", "8", "9", "+"},
-        {"4", "5", "6", "-"},
-        {"1", "2", "3", "*"},
-        { "+/-", "0" , "." , "="}
+                {"CE", "C", "<", "/"},
+                {"7", "8", "9", "+"},
+                {"4", "5", "6", "-"},
+                {"1", "2", "3", "*"},
+                { "+/-", "0" , "." , "="}
     };
 
+
     public static final Font btn_font = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-    public static final Font label_font = new Font(Font.SANS_SERIF, Font.BOLD, 80);
+    public static final Font panel_font = new Font(Font.SANS_SERIF, Font.BOLD, 13);
 
-    JTextField textField = new JTextField(13);
-    JLabel operation = new JLabel();
+            JTextField textField = new JTextField(13);
+            JTextField operationField = new JTextField(13);
 
-     public App(){
+    public App(){
         super("Calculator");
         
-        operation.setText("");
-        operation.setFont(label_font);
-        operation.setBackground(Color.BLUE);
+        
 
 
-        textField.setFont(btn_font.deriveFont(Font.PLAIN));
-        textField.setText("0");
+            textField.setFont(btn_font.deriveFont(Font.PLAIN));
+            textField.setText("0");
+
+            operationField.setFont(btn_font.deriveFont(Font.PLAIN));
+            // operationField.setBackground(Color.RED);
+            operationField.setForeground(Color.GREEN);
+            operationField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+
+
 
         JPanel btnPanel = new JPanel(new GridLayout(5, 4));
   
         
-        for (int i = 0; i < buttons_text.length; i++) {
-            for (int j = 0; j < buttons_text[i].length; j++) {
-                JButton btn = new JButton(buttons_text[i][j]);
-                btn.setFont(btn_font);
-                btnPanel.add(btn);
-                btn.addActionListener(this);;
+            for (int i = 0; i < buttons_text.length; i++) {
+                for (int j = 0; j < buttons_text[i].length; j++) {
+                    JButton btn = new JButton(buttons_text[i][j]);
+                    btn.setFont(btn_font);
+                    btn.setBackground(Color.WHITE);
+                    btnPanel.add(btn);
+                    btn.addActionListener(this);;
+                }
             }
-        }
 
         JPanel mainPanel = new JPanel();
-        mainPanel.add(operation);
         mainPanel.add(textField, BorderLayout.PAGE_START);
+        mainPanel.add(operationField, BorderLayout.CENTER);
         mainPanel.add(btnPanel, BorderLayout.CENTER);
 
         JFrame frame = new JFrame("Calc");
@@ -75,8 +85,14 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
         frame.setVisible(true);
     }
 
+    private void showInLabel(){
+
+       operationField.setText(operationField.getText() + "" + operator);
+
+    }
+
     public static void main(String[] args) throws Exception {
-            new App(); 
+            new App().setVisible(true); 
     }
 
     @Override
@@ -90,6 +106,7 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
 
                     if (value.equals("0")) {
                         textField.setText(action);
+                        operationField.setText(action);
                     }
                     else{
                         if  (value.contains(".") && action.equals(".")){
@@ -97,7 +114,6 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
                         }
                         else{
                             textField.setText(value + action);
-                            
                         }
                     }
                     break;
@@ -107,6 +123,7 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
                     operator = action;
                     value1 = Double.parseDouble(textField.getText());
                     textField.setText("0");
+                    showInLabel();
                     break;
 
             case "CE" :
@@ -145,11 +162,15 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
                    double signe = Double.parseDouble(String.valueOf(textField.getText()));
                    signe = signe * (-1);
                    textField.setText(String.valueOf(signe));
+                   operationField.setText(String.valueOf(signe));
                         
                     
             case "=" : 
                     
                     value2 = Double.parseDouble(textField.getText());
+                    operationField.setText(operationField.getText() + value2);
+
+
 
                     switch(operator) {
 

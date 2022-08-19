@@ -91,8 +91,52 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
 
     }
 
+    public String getStringOfDoubles(double number){
+
+        if(number == (long) number)
+            return String.format("%d",(long)number);
+            
+        else        
+            return String.valueOf(number);
+    }
+
+    public void calculateResult(){
+        value2 = Double.parseDouble(textField.getText());
+
+        operationField.setText(operationField.getText() + getStringOfDoubles(value2));
+
+        switch(operator) {
+
+            case "+" :
+                result = value1 + value2;
+                break;
+
+            case "-" :
+                result = value1 - value2;
+                break;
+       
+     
+            case "*" :
+                result = value1 * value2;
+                break;
+        
+        
+            case "/" :
+                result = value1 / value2;
+                break;
+
+        default : return;
+       
+        }
+
+        textField.setText(getStringOfDoubles(result));
+        operationField.setText(operationField.getText() + "=");
+
+        operator = "";
+    }
+
     public static void main(String[] args) throws Exception {
-            new App().setVisible(true); 
+            new App(); 
     }
 
     @Override
@@ -106,7 +150,6 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
 
                     if (value.equals("0")) {
                         textField.setText(action);
-                        operationField.setText(action);
                     }
                     else{
                         if  (value.contains(".") && action.equals(".")){
@@ -116,21 +159,24 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
                             textField.setText(value + action);
                         }
                     }
-                    break;
+            break;
 
             case "+", "-", "*", "/":
-
+                    if(!operator.equals("")){
+                        calculateResult();
+                    }
                     operator = action;
                     value1 = Double.parseDouble(textField.getText());
                     textField.setText("0");
+                    operationField.setText(getStringOfDoubles(value1));
                     showInLabel();
-                    break;
+            break;
 
             case "CE" :
 
                     textField.setText("0");
                     System.out.println("the text is set to default value");
-                    break;
+            break;
 
             case "<" :
                     
@@ -146,57 +192,32 @@ public class App extends JFrame implements ListSelectionListener , ActionListene
                         }
 
                     textField.setText(text1);
+                    operationField.setText(text1);
                     System.out.println("removed the las entered value");
-                    break;
+            break;
             
             case "C" :
 
                     value1 = 0;
                     operator = "";
                     textField.setText("0");
+                    operationField.setText("");
                     System.out.println("the text is set to default value ");
-                    break;
+            break;
 
             case "+/-" :
                         
-                   double signe = Double.parseDouble(String.valueOf(textField.getText()));
-                   signe = signe * (-1);
-                   textField.setText(String.valueOf(signe));
-                   operationField.setText(String.valueOf(signe));
+                   double signe = Double.parseDouble(textField.getText());
+                   signe *= -1;
+                   textField.setText(getStringOfDoubles(signe));
+                   operationField.setText(getStringOfDoubles(signe));
+            break;
                         
                     
             case "=" : 
-                    
-                    value2 = Double.parseDouble(textField.getText());
-                    operationField.setText(operationField.getText() + value2);
+                    calculateResult();
+            break;
 
-
-
-                    switch(operator) {
-
-                        case "+" :
-                            result = value1 + value2;
-                            break;
-
-                        case "-" :
-                            result = value1 - value2;
-                            break;
-                   
-                 
-                        case "*" :
-                            result = value1 * value2;
-                            break;
-                    
-                    
-                        case "/" :
-                            result = value1 / value2;
-                            break;
-
-                    default : return;
-                   
-                    }
-
-                    textField.setText(result.toString());
 
             default:
 
